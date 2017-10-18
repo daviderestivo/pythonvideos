@@ -1,5 +1,5 @@
-# pythonvideos
-Code examples for David Bombal's Python For Network Engineers YouTube Videos
+# Python for Network Engineers
 
-You can find the GNS3 Python YouTube videos here:
-https://www.youtube.com/playlist?list=PLhfrWIlLOoKPn7T9FtvbOWX8GxgsFFNwn
+This repo is a fork of [David Bombal's Python For Network Engineers](https://github.com/davidbombal/pythonvideos)
+
+I have reorganized some stuff and focus only on python3.
