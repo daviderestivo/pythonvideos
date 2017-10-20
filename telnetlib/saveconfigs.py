@@ -1,35 +1,35 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import getpass
-#import sys
 import telnetlib
 
-# Get Username and Password
-user = raw_input("Enter your username: ")
-password = getpass.getpass()
+#  List of switches
+hosts = ("192.168.0.1",)
 
-#  Open file with list of switches
-f = open ("myswitches")
+def get_config(host, username, password):
+        print ("Getting running-config of: " + host)
+        HOST = host.strip()
+        tn = telnetlib.Telnet(HOST)
+        tn.read_until(b"Username: ")
+        tn.write(username.encode('ascii') + b"\n")
+        if password:
+            tn.read_until(b"Password: ")
+            tn.write(password.encode('ascii') + b"\n")
 
-#  Telnet to each switch and cofigure it
-for line in f:
-	print "Getting running-config " + (line)
-	HOST = line.strip()
-	tn = telnetlib.Telnet(HOST)
+        tn.write(b"terminal length 0\n")
+        tn.write(b"show run\n")
+        tn.write(b"exit\n")
 
-	tn.read_until("Username: ")
-	tn.write(user + "\n")
-	if password:
-	    tn.read_until("Password: ")
-	    tn.write(password + "\n")
-
-	tn.write("terminal length 0\n")
-	tn.write("show run\n")
-	tn.write("exit\n")
-
-        readoutput = tn.read_all()
-        saveoutput =  open("switch" + HOST, "w")
+        readoutput = tn.read_all().decode('ascii')
+        saveoutput = open("switch-" + HOST, "w+")
         saveoutput.write(readoutput)
         saveoutput.write("\n")
-	    saveoutput.close
-        print tn.read_all()
+        saveoutput.close
+
+if __name__ == "__main__":
+        # Get Username and Password
+        username = input("Enter your username: ")
+        password = getpass.getpass()
+        #  Telnet to each switch and cofigure it
+        for host in hosts:
+                get_config(host, username, password)
