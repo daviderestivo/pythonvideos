@@ -1,0 +1,31 @@
+!
+! Generate RAS keypair (choose 1024 bits length)
+! 
+crypto key generate rsa
+!
+interface FastEthernet0/0
+ ip address 192.168.0.1 255.255.255.0
+ duplex auto
+ speed auto
+exit
+!
+enable password cisco
+!
+username admin password cisco
+!
+line vty 0 4
+ login local
+ transport input all
+exit
+!
+! No enable password for user admin
+!
+user admin privilege 15
+!
+! Enable ssh
+!
+ip domain-name rtrs.local
+ip ssh time-out 60
+ip ssh authentication-retries 2
+!
+end
