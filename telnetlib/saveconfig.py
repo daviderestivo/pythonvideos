@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
 
-import getpass
 import telnetlib
+import getpass
 
 #  List of switches
 hosts = ("192.168.0.1",)
 
 def get_config(host, username, password):
-        print ("Getting running-config of: " + host)
         HOST = host.strip()
         try:
                 tn = telnetlib.Telnet(HOST)
+                print("Successfully connected to: " + host)
+                print ("Getting current config of: " + host)
                 tn.read_until(b"Username: ")
                 tn.write(username.encode('ascii') + b"\n")
                 if password:
@@ -20,6 +21,7 @@ def get_config(host, username, password):
                 tn.write(b"terminal length 0\n")
                 tn.write(b"show run\n")
                 tn.write(b"exit\n")
+                tn.close()
 
                 readoutput = tn.read_all().decode('ascii')
                 saveoutput = open("switch-" + HOST, "w+")
@@ -30,9 +32,9 @@ def get_config(host, username, password):
                 print("OS error: {0}".format(err))
 
 if __name__ == "__main__":
-        # Get Username and Password
+        # Get username and password
         username = input("Enter your username: ")
         password = getpass.getpass()
-        #  Telnet to each switch and cofigure it
+        #  Telnet to each switch and configure it
         for host in hosts:
                 get_config(host, username, password)
