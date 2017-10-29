@@ -11,18 +11,20 @@ def get_config(host, username, password):
         try:
             ssh_client = paramiko.SSHClient()
             ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            ssh_client.connect(hostname=ip_address,username=username,password=password)
-            print("Successfully connected to: " + ip_address)
-            print ("Getting current config of: " + host)
+            ssh_client.connect(hostname=HOST,username=username,password=password)
+            print("Successfully connected to: " + HOST)
+            print ("Getting current config of: " + HOST)
             remote_connection = ssh_client.invoke_shell()
-            ("router ospf 1\n")
-            remote_connection.send(b"terminal length 0\n")
-            remote_connection.send(b"show run\n")
-            remote_connection.send(b"exit\n")
+            remote_connection.send("terminal length 0\n")
+            time.sleep(1)
+            # Strip commands output
+            remote_connection.recv(65535)
+            # Get running-config
+            remote_connection.send("show run\n")
+            time.sleep(1)
+            remote_connection.send("exit\n")
 
             readoutput = remote_connection.recv(65535).decode('ascii')
-            ssh_client.close()
-
             saveoutput = open("switch-" + HOST, "w+")
             saveoutput.write(readoutput)
             saveoutput.write("\n")
