@@ -15,6 +15,6 @@ RUN apt-get update && apt-get install -yq python3 \
     && apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install jupyter paramiko netmiko
+RUN pip3 install jupyter paramiko netmiko paramiko-expect napalm
 
 CMD exec jupyter notebook --allow-root --NotebookApp.token='' > /var/log/jupyter.log 2>&1
