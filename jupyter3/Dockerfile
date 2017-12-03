@@ -12,6 +12,8 @@ RUN apt-get update && apt-get install -yq python3 \
     python3-pip \
     emacs \
     git \
+    net-tools\
+    iputils-ping \
     && apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
